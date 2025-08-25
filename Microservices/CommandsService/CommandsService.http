@@ -1,0 +1,36 @@
+@CommandsService_HostAddress = http://localhost:5218
+
+
+###
+
+POST {{CommandsService_HostAddress}}/api/c/platform
+Content-Type: application/json
+
+###
+
+
+### get all platforms
+GET {{CommandsService_HostAddress}}/api/c/platform
+
+### get all commands by  platform id
+GET {{CommandsService_HostAddress}}/api/c/platform/1
+
+### get command by comand id + platform id
+GET {{CommandsService_HostAddress}}/api/c/platform/1/command/1
+
+### Create a new Command
+POST {{CommandsService_HostAddress}}/api/c/platform/1/command
+Content-Type: application/json
+
+{
+  "howTo": "How to use this platform",
+  "commandLine": "dotnet run"
+}
+
+### Docker
+
+@CommandsService_HostAddress_Docker = http://localhost:8080
+
+
+POST {{CommandsService_HostAddress_Docker}}/api/c/platform
+Content-Type: application/json

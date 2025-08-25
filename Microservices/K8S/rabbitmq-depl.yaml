@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rabbitmq-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rabbitmq
+  template:
+    metadata:
+      labels:
+        app: rabbitmq
+    spec:
+      containers:
+        - name: rabbitmq
+          image: rabbitmq:4-management
+          ports:
+            - containerPort: 15672
+              name: rbmq-mgmt-port
+            - containerPort: 5672
+              name: rbmq-msg-port
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq-clusterip-srv
+spec:
+  type: ClusterIP
+  selector:
+    app: rabbitmq
+  ports:
+    - name: rbmq-mgmt-port
+      protocol: TCP
+      port: 15672
+      targetPort: 15672
+    - name: rbmq-msg-port
+      protocol: TCP
+      port: 5672
+      targetPort: 5672
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq-loadbalancer-srv
+spec:
+  type: LoadBalancer
+  selector:
+    app: rabbitmq
+  ports:
+    - name: rbmq-mgmt-port
+      protocol: TCP
+      port: 15672
+      targetPort: 15672
+    - name: rbmq-msg-port
+      protocol: TCP
+      port: 5672
+      targetPort: 5672
+### kubectl apply -f rabbitmq-depl.yaml
+
+### erklärung
+#  1. Abschnitt: Deployment
+# Definiert, wie der RabbitMQ-Pod gestartet wird (Image, Labels, Ports, Anzahl der Replikate usw.).
+#
+# 2. Abschnitt: Service (ClusterIP)
+# Definiert einen internen Kubernetes-Service mit Namen rabbitmq-clusterip-srv.
+# Er sorgt dafür, dass andere Pods im Cluster RabbitMQ über diesen Namen und die Ports (15672, 5672) erreichen können.
+# Er ist nur intern im Cluster sichtbar.
+#
+# 3. Abschnitt: Service (LoadBalancer)
+# Definiert einen Service vom Typ LoadBalancer mit Namen rabbitmq-loadbalancer-srv.
+# Dieser Service macht RabbitMQ (Management-UI und Messaging-Port) von außen erreichbar (z. B. für lokale Entwicklung).
+# In Cloud-Umgebungen wird eine echte LoadBalancer-IP vergeben, bei Docker Desktop kannst du über die Node-IP und den Port zugreifen.

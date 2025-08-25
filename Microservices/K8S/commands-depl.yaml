@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: commands-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: commandsservice
+  template:
+    metadata:
+      labels:
+        app: commandsservice
+    spec:
+      containers:
+        - name: commandsservice
+          image: commandsservice:latest
+          imagePullPolicy: IfNotPresent # ! das hat funktioniert WICHTIG
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: commands-clusterip-srv
+spec:
+  type: ClusterIP
+  selector:
+    app: commandsservice
+  ports:
+    - name: commandsservice
+      protocol: TCP
+      port: 80
+      targetPort: 8080
+# kubectl version
+# kubectl apply -f commands-depl.yaml => pods erstellen durch dieses yaml
+# kubectl get deployments
+# kubectl get pods => schauen ob alles gut läuft
+
+# wenn die pods gestoppt/gelöscht werden => fangen sie automatisch wieder an
+# kubectl delete deployment platforms-depl um Deployment zu löschen
+
+# nginx hinzugefügt :
+# https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.13.0/deploy/static/provider/cloud/deploy.yaml
+
+# namespaces: weil ngnixs wo anders läuft
+# kubectl get namespace
+# kubectl get pods --namespace ingress-nginx

@@ -1,0 +1,97 @@
+@PlatformService_HostAddress = http://localhost:5294
+
+
+
+###
+
+
+GET {{PlatformService_HostAddress}}/api/platform
+
+
+###
+
+GET {{PlatformService_HostAddress}}/api/platform/1
+
+###
+POST {{PlatformService_HostAddress}}/api/platform
+Content-Type: application/json
+
+{
+  "name": "Docker",
+  "publisher": "Docker",
+  "cost": "Free"
+}
+
+### test this !
+GET {{PlatformService_HostAddress}}/api/platform/test
+
+###
+GET {{PlatformService_HostAddress}}/api/platform/test2
+
+
+
+
+
+@PlatformService_HostAddress_Docker = http://localhost:8080
+### Docker
+
+
+GET {{PlatformService_HostAddress_Docker}}/api/platform
+
+
+###
+
+GET {{PlatformService_HostAddress_Docker}}/api/platform/1
+
+###
+POST {{PlatformService_HostAddress_Docker}}/api/platform
+Content-Type: application/json
+
+{
+  "name": "Docker",
+  "publisher": "Docker",
+  "cost": "Free"
+}
+
+### Kubernetes Node Port
+@PlatformService_HostAddress_Kubernetes= http://localhost:32173
+
+GET {{PlatformService_HostAddress_Kubernetes}}/api/platform
+
+
+###
+
+GET {{PlatformService_HostAddress_Kubernetes}}/api/platform/1
+
+###
+POST {{PlatformService_HostAddress_Kubernetes}}/api/platform
+Content-Type: application/json
+
+{
+  "name": "Docker",
+  "publisher": "Docker",
+  "cost": "Free"
+}
+
+###
+GET {{PlatformService_HostAddress_Kubernetes}}/api/platform/test
+
+###
+GET {{PlatformService_HostAddress_Kubernetes}}/api/platform/test2
+
+
+### Nginx Ingress
+@PlatformService_HostAddress_Ingress= http://test.com
+
+###
+GET {{PlatformService_HostAddress_Ingress}}/api/platform/test
+
+###
+GET {{PlatformService_HostAddress_Ingress}}/api/platform/test2
+
+###
+
+GET {{PlatformService_HostAddress_Ingress}}/api/c/platform
+
+###
+GET {{PlatformService_HostAddress_Ingress}}/api/platform

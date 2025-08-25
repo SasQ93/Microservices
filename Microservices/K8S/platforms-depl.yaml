@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: platforms-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: platformservice
+  template:
+    metadata:
+      labels:
+        app: platformservice
+    spec:
+      containers:
+        - name: platformservice
+          image: platformservice:latest
+          imagePullPolicy: IfNotPresent # ! das hat funktioniert WICHTIG
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mssql
+                  key: SA_PASSWORD
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: platforms-clusterip-srv
+spec:
+  type: ClusterIP
+  selector:
+    app: platformservice
+  ports:
+    - name: platformservice
+      protocol: TCP
+      port: 80
+      targetPort: 8080
+# kubectl version
+# kubectl apply -f platforms-depl.yaml => pods erstellen durch dieses yaml
+# kubectl get deployments
+# kubectl get pods => schauen ob alles gut läuft
+
+# wenn die pods gestoppt/gelöscht werden => fangen sie automatisch wieder an
+# kubectl delete deployment platforms-depl um Deployment zu löschen
+
+# refresh the platform-dpl
+# kubectl rollout restart deployment platforms-depl
